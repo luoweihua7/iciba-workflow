@@ -23,7 +23,7 @@ def iciba_search(word):
   url = "https://dict.iciba.com/dictionary/word/query/web?%s" % urllib.urlencode(query)
   r = web.get(url).json()
   for dic in r["message"]["baesInfo"]["symbols"][0]["parts"]:
-    wf.add_item("; ".join(dic["means"]), dic["part"], icon="iciba.png", valid=True, arg=word)
+    wf.add_item("; ".join(dic["means"]), dic["part"], icon="icon.png", valid=True, arg=word)
   wf.send_feedback()
 
 

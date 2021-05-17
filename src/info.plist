@@ -58,7 +58,7 @@
 				<key>queuemode</key>
 				<integer>2</integer>
 				<key>runningsubtext</key>
-				<string>正在查询 {query} 中...</string>
+				<string>正在查询单词 {query} ...</string>
 				<key>script</key>
 				<string>query="{query}"
 

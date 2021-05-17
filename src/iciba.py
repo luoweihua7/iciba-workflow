@@ -23,14 +23,21 @@ def iciba_search(word):
   url = "https://dict.iciba.com/dictionary/word/query/web?%s" % urllib.urlencode(query)
   r = web.get(url).json()
   for dic in r["message"]["baesInfo"]["symbols"][0]["parts"]:
-    wf.add_item("; ".join(dic["means"]), dic["part"], icon="icon.png", valid=True, arg=word)
+    wf.add_item("；".join(dic["means"]), dic["part"], icon="icon.png", valid=True, arg=word)
   wf.send_feedback()
 
 
 def main(wf):
-  if len(wf.args) == 1:
-    word = wf.args[0]
-    iciba_search(word)
+  try:
+    if len(wf.args) > 0:
+      word = wf.args[0]
+      iciba_search(word)
+    else:
+      wf.add_item('爱词霸查词', '请输入需要查询的英文单词', icon="icon.png")
+      wf.send_feedback()
+  except:
+    wf.logger.error(sys.exc_info()[0])
+    wf.send_feedback()
 
 if __name__ == '__main__':
   wf = Workflow3()

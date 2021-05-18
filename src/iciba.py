@@ -9,9 +9,14 @@ import sys
 import time
 
 from workflow import Workflow3, web
+import i18n
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+def fail_feedback():
+  wf.add_item(title=i18n.dic["DEFAULT_TITLE"], subtitle=i18n.dic["DEFAULT_ERROR"], icon="icon.png")
+  wf.send_feedback()
 
 def iciba_search(word):
   now = int(round(time.time() * 1000))
@@ -22,22 +27,29 @@ def iciba_search(word):
   query ={'client': '6', 'key': '1000006', 'timestamp': now, 'word': word, 'signature': signature}
   url = "https://dict.iciba.com/dictionary/word/query/web?%s" % urllib.urlencode(query)
   r = web.get(url).json()
-  for dic in r["message"]["baesInfo"]["symbols"][0]["parts"]:
-    wf.add_item("；".join(dic["means"]), dic["part"], icon="icon.png", valid=True, arg=word)
-  wf.send_feedback()
-
+  wf.logger.info("request url: %s" % url)
+  if ("symbols" in r["message"]["baesInfo"]):
+    for dic in r["message"]["baesInfo"]["symbols"][0]["parts"]:
+      wf.add_item(title="；".join(dic["means"]), subtitle=dic["part"], icon="icon.png", valid=True, arg=word)
+    wf.send_feedback()
+  elif ("translate_result" in r["message"]["baesInfo"]):
+    baseInfo = r["message"]["baesInfo"]
+    wf.add_item(title=baseInfo["translate_result"], subtitle=baseInfo["translate_msg"], icon="icon.png", valid=True, arg=word)
+    wf.send_feedback()
+  else:
+    fail_feedback()
 
 def main(wf):
   try:
     if len(wf.args) > 0:
-      word = wf.args[0]
+      word = ' '.join(wf.args[0:])
+      wf.logger.info("translate word: %s" % word)
       iciba_search(word)
     else:
-      wf.add_item('爱词霸查词', '请输入需要查询的英文单词', icon="icon.png")
-      wf.send_feedback()
+      fail_feedback()
   except:
     wf.logger.error(sys.exc_info()[0])
-    wf.send_feedback()
+    fail_feedback()
 
 if __name__ == '__main__':
   wf = Workflow3()

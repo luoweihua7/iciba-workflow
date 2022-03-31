@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>iciba</string>
+	<string>com.larify.iciba</string>
 	<key>category</key>
 	<string>Productivity</string>
 	<key>connections</key>
@@ -29,7 +29,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>iciba</string>
+	<string>iciba - Lookup word</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -62,7 +62,7 @@
 				<key>script</key>
 				<string>query="{query}"
 
-python iciba.py $query</string>
+python3 iciba2.py $query</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -104,7 +104,11 @@ python iciba.py $query</string>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>爱词霸查词</string>
+	<string>金山词霸单词查询（爱词霸）
+
+- 支持查询单个单词
+- 支持查询短语（使用返回的机器翻译结果）
+- 简单支持python3</string>
 	<key>uidata</key>
 	<dict>
 		<key>8EFBAF88-2921-4611-865D-E96145651646</key>
@@ -122,6 +126,10 @@ python iciba.py $query</string>
 			<integer>195</integer>
 		</dict>
 	</dict>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>2.0.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/luoweihua7/iciba-workflow</string>
 </dict>

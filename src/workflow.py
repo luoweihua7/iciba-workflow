@@ -5,10 +5,9 @@
 
 import sys
 import json
-import urllib
+from urllib.request import urlopen, Request
 import logging
 import logging.handlers
-
 
 class WorkflowLite():
     def __init__(self):
@@ -31,11 +30,15 @@ class WorkflowLite():
       sys.stdout.write(output_str)
       sys.stdout.flush()
     
-    def get_json(url, params):
-      fullurl = "%s?%s" % (url, urllib.parse.urlencode(params))
-      resp = urllib.request.urlopen(fullurl)
-      obj = json.loads(resp.read())
+    def get_json(self, url, headers={}):
+      result = self.get(url, headers)
+      obj = json.loads(result)
       return obj
+
+    def get(self, url, headers={}):
+      req = Request(url, None, headers)
+      res = urlopen(req)
+      return res.read()
 
     @property
     def logger(self):

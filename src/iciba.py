@@ -4,17 +4,17 @@
 # Copyright by Larify. All Rights Reserved.
 
 import urllib
+import urllib.parse
+import urllib.request
 import hashlib
 import sys
 import time
+import json
 
-from workflow import Workflow3, web
+from workflow import WorkflowLite
 import i18n
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
-def fail_feedback():
+def default_feedback():
   wf.add_item(title=i18n.dic["DEFAULT_TITLE"], subtitle=i18n.dic["DEFAULT_ERROR"], icon="icon.png")
   wf.send_feedback()
 
@@ -25,33 +25,34 @@ def iciba_search(word):
   hash_message = "/dictionary/word/query/web%s%s" % (hash_body, hash_key)
   signature = hashlib.md5(hash_message.encode()).hexdigest()
   query ={'client': '6', 'key': '1000006', 'timestamp': now, 'word': word, 'signature': signature}
-  url = "https://dict.iciba.com/dictionary/word/query/web?%s" % urllib.urlencode(query)
+  url = "https://dict.iciba.com/dictionary/word/query/web?%s" % urllib.parse.urlencode(query)
   wf.logger.info("request url: %s" % url)
-  r = web.get(url).json()
-  wf.logger.info("request url: %s" % url)
+  r=wf.get_json(url)
   if ("symbols" in r["message"]["baesInfo"]):
     for dic in r["message"]["baesInfo"]["symbols"][0]["parts"]:
-      wf.add_item(title="；".join(dic["means"]), subtitle=dic["part"], icon="icon.png", valid=True, arg=word)
-    wf.send_feedback()
+       wf.add_item(title="；".join(dic["means"]), subtitle=dic["part"], icon="icon.png", valid=True, arg=word)
   elif ("translate_result" in r["message"]["baesInfo"]):
     baseInfo = r["message"]["baesInfo"]
     wf.add_item(title=baseInfo["translate_result"], subtitle=baseInfo["translate_msg"], icon="icon.png", valid=True, arg=word)
-    wf.send_feedback()
   else:
-    fail_feedback()
+    wf.add_item(title=i18n.dic["DEFAULT_TITLE"], subtitle=i18n.dic["DEFAULT_ERROR"], icon="icon.png")
+  wf.send_feedback()
 
 def main(wf):
+  args = sys.argv[1:]
   try:
-    if len(wf.args) > 0:
-      word = ' '.join(wf.args[0:])
-      wf.logger.info("translate word: %s" % word)
+    if len(args) > 0:
+      word = ' '.join(args[0:])
+      wf.logger.info("search word: %s" % word)
       iciba_search(word)
     else:
-      fail_feedback()
+      wf.logger.info("parameter is empty.")
+      default_feedback()
   except:
-    wf.logger.error(sys.exc_info()[0])
-    fail_feedback()
+    wf.logger.error(sys.exc_info())
+    default_feedback()
 
 if __name__ == '__main__':
-  wf = Workflow3()
-  sys.exit(wf.run(main))
+  wf = WorkflowLite()
+  wf.logger.info("iciba start runing ...")
+  sys.exit(main(wf))

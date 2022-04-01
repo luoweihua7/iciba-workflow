@@ -62,7 +62,7 @@
 				<key>script</key>
 				<string>query="{query}"
 
-python3 iciba2.py $query</string>
+python3 iciba.py $query</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -129,7 +129,7 @@ python3 iciba2.py $query</string>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>2.0.0</string>
+	<string>2.0.1</string>
 	<key>webaddress</key>
 	<string>https://github.com/luoweihua7/iciba-workflow</string>
 </dict>

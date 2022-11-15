@@ -30,7 +30,7 @@ def iciba_search(word):
   r=wf.get_json(url)
   if ("symbols" in r["message"]["baesInfo"]):
     result = r["message"]["baesInfo"]["symbols"][0]
-    if hasattr(result, 'ph_en') and hasattr(result, 'ph_am') and len(result["ph_en"]) > 0 and len(result["ph_am"]) > 0:
+    if len(result["ph_en"]) > 0 and len(result["ph_am"]) > 0:
       wf.add_item(title=word, subtitle="%s[ %s ]    %s[ %s ]" % (i18n.dic["DEFAULT_EN"], result["ph_en"], i18n.dic["DEFAULT_AM"], result["ph_am"]), icon="icon.png", valid=True, arg=word)
     for dic in result["parts"]:
        wf.add_item(title="；".join(dic["means"]), subtitle=dic["part"], icon="icon.png", valid=True, arg=word)
